@@ -1,21 +1,21 @@
 const express = require('express');
 const axios = require('axios');
-const bodyParser = require('body-parser');
-const cors = require('cors');
 
 const app = express();
-app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static('public'));
 
 const API_URL = 'https://api.kinaracloud.online/v1/start';
 const TOKEN = process.env.TOKEN;
 
+// Root route fix
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
 function formatPhone(phone) {
     phone = phone.trim();
-    if (phone.startsWith('0')) {
-        return '254' + phone.substring(1);
-    }
+    if (phone.startsWith('0')) return '254' + phone.substring(1);
     return phone;
 }
 
@@ -63,4 +63,4 @@ app.post('/send', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('Server running on port ' + PORT));
+app.listen(PORT, () => console.log('Running on port ' + PORT));
